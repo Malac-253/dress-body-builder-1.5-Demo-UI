@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Single Part Viewer</title>
+  <link rel="stylesheet" href="single-part.css"/>
+</head>
+<body>
+  <header>
+    <h1 id="part-title">Loading Part...</h1>
+    <h2 id="part-author"></h2>
+  </header>
+
+  <main class="split-container">
+    <!-- Left: The big SVG area + reset button + thumbs up/down -->
+    <div class="left-column">
+      <div id="big-svg-container"></div>
+      
+      <button id="reset-view-btn">Reset View</button>
+
+      <div class="like-row">
+        <button id="like-button">&#128077;</button>
+        <button id="dislike-button">&#128078;</button>
+      </div>
+    </div>
+
+    <!-- Right: textual info -->
+    <div class="right-column">
+      <h3>Raw JSON (part)</h3>
+      <pre id="json-output"></pre>
+
+      <h3>Raw JSON (color design)</h3>
+      <pre id="color-json-output"></pre>
+    </div>
+  </main>
+
+  <!-- We use the same D3 and svg-renderer as the main page -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+  <!-- Our SVG pan zoom logic-->
+  <script src="../lib/zoom-pan-lib.js"></script>
+
+  <!-- Load B3 Keys -->
+  <script src="../key/keys.js"></script>
+  
+  <!-- D3 + shared svg-renderer + our type-catalog script -->
+  <script src="../lib/svg-renderer.js"></script>
+  <script src="single-part.js"></script>
+</body>
+</html>

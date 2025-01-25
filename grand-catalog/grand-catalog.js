@@ -2,9 +2,6 @@
  * grand-catalog.js
  *****************************************/
 
-const API_BASE = "https://dress-body-builder-2.onrender.com/api/";
-const GUEST_USER_TOKEN = "e41cac5b45048591b81cf84a7070e78765a58be6";
-const ACCESS_CODE = "6tosDJj29gvSJ7xdu3LsO0LoVgZOoeB8";
 const ANIM_STYLE_ID = 3;
 
 const ROWS_PER_FETCH = 5;
@@ -81,8 +78,16 @@ function createTypeRowDOM(typeObj) {
   rowHeader.className = "row-header";
 
   const h3 = document.createElement("h3");
-  h3.textContent = typeObj.name;
+  //   h3.textContent = typeObj.name;
+  //   rowHeader.appendChild(h3);
+
+  const typeLink = document.createElement("a");
+  typeLink.href = `../type-catalog/type-catalog.html?type_id=${typeObj.graphical_type_id}`;
+  typeLink.target = TARGET;
+  typeLink.textContent = typeObj.name; 
+  h3.appendChild(typeLink);
   rowHeader.appendChild(h3);
+
 
   // Additional info block
   const infoDiv = document.createElement("div");
@@ -93,9 +98,9 @@ function createTypeRowDOM(typeObj) {
   const typeId = typeObj.graphical_type_id;
 
   infoDiv.innerHTML = `
+    <p>Compartment Type: '${compartment}'</p>
     <p>Description: ${desc}</p>
-    <p>Compartment: ${compartment}</p>
-    <p style="font-size:12px;">Owned by: ${owner} – ID: ${typeId}</p>
+    <p style="font-size:12px;">Owned by: B3 Lite & Amote Studio – ID: ${typeId}</p>
   `;
   rowHeader.appendChild(infoDiv);
 
@@ -138,8 +143,24 @@ function createPartCell(partObj) {
 
   const pName = document.createElement("p");
   pName.className = "part-name";
-  pName.textContent = partObj.name;
+
+//   pName.textContent = partObj.name;
+//   cell.appendChild(pName);
+
+    const link = document.createElement("a");
+  // Link to new page "single-part.html?part_id=###"
+  link.href = `../single-part/single-part.html?part_id=${partObj.graphical_part_id}`;
+  link.target = TARGET;; // open in new tab
+  link.textContent = partObj.name;
+  pName.appendChild(link);
   cell.appendChild(pName);
+
+  // Add "author" under the name if you want it in the main page too:
+  const authorLine = document.createElement("p");
+  authorLine.className = "author-line";
+  // authorLine.textContent = `Author: ${partObj.owned_by ?? "???"}`;
+  authorLine.textContent = `Author: B3 Lite & Amote Studio`;
+  cell.appendChild(authorLine);
 
   const colorCarousel = document.createElement("div");
   colorCarousel.className = "color-carousel";
@@ -163,8 +184,14 @@ function createPartCell(partObj) {
   colorCarousel.appendChild(right);
 
   cell.appendChild(colorCarousel);
+  
+    // Create a reset button
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "reset-view-btn";
+    resetBtn.textContent = "Reset View";
+    cell.appendChild(resetBtn);
 
-  return { cell, containerId };
+  return { cell, containerId, resetBtn };
 }
 
 // Main Render
@@ -201,7 +228,7 @@ async function renderGrandCatalog() {
       console.log(`Parts for ${t.name} (#${t.graphical_type_id}):`, parts);
 
       for (const p of parts) {
-        const { cell, containerId } = createPartCell(p);
+        const { cell, containerId, resetBtn } = createPartCell(p);
         // 1) Append the cell so D3 can find the container
         grid.appendChild(cell);
 
@@ -224,12 +251,16 @@ async function renderGrandCatalog() {
 
         // 3) Actually render the SVG
         if (p.graphical_data) {
-          console.log(`renderGraphicalPartSVG => type "${t.name}" / container "#${containerId}" / part name ${p.name}`);
-          await renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, t.name);
+            const { resetViewFill, resetViewLine } = await renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, t.name);
         }
+
+        resetBtn.onclick = () => {
+            if (resetViewFill) resetViewFill();
+            if (resetViewLine) resetViewLine();
+        };
       }
     } catch (err) {
-      console.error(`Failed to fetch parts for type ${t.name}:`, err);
+      console.error(`Failed to  for type ${t.name}:`, err);
     }
 
     

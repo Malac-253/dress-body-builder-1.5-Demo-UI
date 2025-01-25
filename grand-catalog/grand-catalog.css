@@ -38,18 +38,24 @@
   
   /* Each row (GraphicalPartType) */
   .catalog-row {
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
-    padding: 20px;
+    padding: 10px;
+    display: block;
   }
   
   /* Row header (title + small info + arrows) */
   .row-header {
     display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
+    align-items: center;
+    justify-content: space-between; /* or space-around if you prefer */
+    gap: 10px;
+    background-color: #f8f8f8;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
   }
   
   .row-header h3 {
@@ -57,6 +63,23 @@
     margin: 0;
     text-transform: capitalize;
     color: #333;
+  }
+
+  /* Link styling => remove underline, custom color, box on hover */
+  .row-header h3 a,
+  .part-name a {
+    text-decoration: none;
+    color: #007acc;
+    padding: 5px 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .row-header h3 a:hover,
+  .part-name a:hover {
+    background-color: #e0f0ff;
+    border-color: #007acc;
+    color: #005c99;
   }
   
   /* Additional info below the type name */
@@ -123,6 +146,14 @@
     justify-content: center;
     overflow: hidden;
   }
+
+  /* Smaller author text, more spacing. */
+  .author-line {
+    font-size: 10px;
+    color: #999;
+    margin-top: 6px;
+    margin-bottom: 6px;
+  }
   
   /* Name under the SVG */
   .catalog-cell .part-name {
@@ -156,3 +187,16 @@
     color: #666;
   }
   
+  .reset-view-btn {
+    margin-top: 5px;
+    font-size: 12px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    padding: 3px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .reset-view-btn:hover {
+    background-color: #ddd;
+  }

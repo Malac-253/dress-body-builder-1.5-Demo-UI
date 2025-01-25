@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Type Catalog</title>
+  <link rel="stylesheet" href="type-catalog.css" />
+</head>
+<body>
+
+  <header>
+    <h1 id="type-title">Loading Type...</h1>
+    <h2 id="type-info"></h2>
+  </header>
+
+  <main id="type-grid">
+    <!-- We’ll dynamically fill in 20 items in a grid -->
+  </main>
+
+  <!-- Load B3 Keys -->
+  <script src="../key/keys.js"></script>
+
+  <!-- Our SVG pan zoom logic-->
+  <script src="../lib/zoom-pan-lib.js"></script>
+
+  <!-- D3 + shared svg-renderer + our type-catalog script -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="../lib/svg-renderer.js"></script>
+  <script src="type-catalog.js"></script>
+</body>
+</html>
