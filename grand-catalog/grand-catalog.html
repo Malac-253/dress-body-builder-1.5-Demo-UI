@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grand Catalog - GPerson</title>
+  <!-- Link the CSS -->
+  <link rel="stylesheet" href="grand-catalog.css" />
+</head>
+<body>
+
+  <header>
+    <h1>B3 Grand Catalog (Amote Studio)</h1>
+    <h2>Animation Style: GPerson (ID: 3)</h2>
+  </header>
+
+  <main id="catalog-container">
+    <!-- JavaScript will dynamically insert rows here. -->
+  </main>
+
+  <!-- Load D3 first (v7 or compatible) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Our SVG renderer logic (gradients + path rendering) -->
+  <script src="svg-renderer.js"></script>
+  <!-- The main script for fetching data + building the catalog -->
+  <script src="grand-catalog.js"></script>
+</body>
+</html>

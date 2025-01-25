@@ -12,7 +12,7 @@ const API_BASE = USE_PROD ? PROD_API_BASE : LOCAL_API_BASE;
 const GUEST_USER_TOKEN = "e41cac5b45048591b81cf84a7070e78765a58be6"; // Replace this with the actual token for the guest user
 
 // 3. Example Access Code
-const ACCESS_CODE = "x5uaGqOZAJJ1GR4LLEMRK05axCgtDGim"; // Replace this with the actual access code
+const ACCESS_CODE = "6tosDJj29gvSJ7xdu3LsO0LoVgZOoeB8"; // Replace this with the actual access code
 
 // 4. Example ID or slug for the animation/story you want:
 const animationId = "1"; // Replace with a valid animation ID
@@ -39,19 +39,19 @@ async function fetchAndExecuteAnimation() {
     const data = await response.json();
     console.log("Fetched animation data:", data);
 
-    // // Check if we have js_code
-    // if (data.js_code) {
-    //   // Option A: Evaluate code directly (simple approach)
-    //   //    *** Security note: eval() can be risky if code is from untrusted sources.
-    //   eval(data.js_code);
+    // Check if we have js_code
+    if (data.js_code) {
+      // Option A: Evaluate code directly (simple approach)
+      //    *** Security note: eval() can be risky if code is from untrusted sources.
+      eval(data.js_code);
 
-    //   // Suppose the code defines a function named `runAnimation()`:
-    //   if (typeof runAnimation === "function") {
-    //     runAnimation();
-    //   }
-    // } else {
-    //   console.warn("No js_code found in this record.");
-    // }
+      // Suppose the code defines a function named `runAnimation()`:
+      if (typeof runAnimation === "function") {
+        runAnimation();
+      }
+    } else {
+      console.warn("No js_code found in this record.");
+    }
   } catch (error) {
     console.error("Error fetching/executing animation code: ", error);
   }
