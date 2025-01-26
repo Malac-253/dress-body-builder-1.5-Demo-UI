@@ -4,7 +4,7 @@ const ACCESS_CODE = "gGLmcMl6x8TRlYnJXyBCSNPEjttcX8qn"; // Public facing UI Only
 
 // Configs
 
-const TARGET = "_blank" // (tab target) Always open new tab ["_blank","_self"]
+const TARGET = "_self" // (tab target) Always open new tab ["_blank","_self"]
 const SKIP_TYPES = ["eyes","mask","neck"]; // all lowercase
 
 const ANIM_STYLE_ID = 3;
