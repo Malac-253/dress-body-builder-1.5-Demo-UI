@@ -2,6 +2,7 @@
  * grand-catalog.js
  *****************************************/
 
+
 async function fetchGraphicalPartTypes() {
   const url = `${API_BASE}graphical-part-type/?anim_style_id=${ANIM_STYLE_ID}&access_code=${ACCESS_CODE}`;
   const res = await fetch(url, {
