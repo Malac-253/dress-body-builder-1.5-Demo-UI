@@ -49,8 +49,9 @@ async function renderSinglePart() {
   }
 
   document.getElementById("part-title").textContent = partData.name;
-  document.getElementById("part-author").textContent = `Author: ${partData.owned_by ?? "???"}`;
-
+  //document.getElementById("part-author").textContent = `Author: ${partData.owned_by ?? "???"}`;
+  document.getElementById("part-author").textContent = `Author: B3 Lite & Amote Studio`;
+  
   // raw JSON
   document.getElementById("json-output").textContent = JSON.stringify(partData, null, 2);
 
@@ -68,7 +69,29 @@ async function renderSinglePart() {
     document.getElementById("color-json-output").textContent = JSON.stringify(usedDesign, null, 2);
   }
 
+
   const colorData = usedDesign ? usedDesign.color_data : { _line_group:[], _color_group:[] };
+
+  // After we fetch `partData` and `usedDesign`, we fill #additional-info:
+  const infoElem = document.getElementById("additional-info");
+  const partDesc = partData.description ?? "None";
+  const partOwnerDate = partData.ownership_date ?? "Unknown Date";
+
+  let cdId = "", cdName = "";
+  if (usedDesign) {
+    cdId = usedDesign.color_design_id;
+    cdName = usedDesign.name;
+  }
+
+  infoElem.innerHTML = `
+    <p><strong>Graphical Part ID:</strong> ${partId}</p>
+    <p><strong>Name:</strong> ${partData.name}</p>
+    <p><strong>Description:</strong> ${partDesc}</p>
+    <p><strong>Ownership Date:</strong> ${partOwnerDate}</p>
+    <hr>
+    <p><strong>Color Design ID:</strong> ${cdId}</p>
+    <p><strong>Color Design Name:</strong> ${cdName}</p>
+  `;
 
   // Render big svg
   const fallbackName = "unknown";

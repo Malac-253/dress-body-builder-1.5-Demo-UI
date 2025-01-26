@@ -38,6 +38,8 @@
   
   /* Each row (GraphicalPartType) */
   .catalog-row {
+    display: block;       /* or flex with flex-direction: column */
+    height: auto;         /* ensure it grows automatically */
     margin-bottom: 30px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -116,6 +118,8 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
+    height: auto;
+    overflow: visible;
   }
   
   /* Each cell */

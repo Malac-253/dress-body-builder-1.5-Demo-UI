@@ -9,6 +9,7 @@
   <header>
     <h1 id="part-title">Loading Part...</h1>
     <h2 id="part-author"></h2>
+    <a class="home-button" href="../grand-catalog/grand-catalog.html">Home</a>
   </header>
 
   <main class="split-container">
@@ -22,6 +23,8 @@
         <button id="like-button">&#128077;</button>
         <button id="dislike-button">&#128078;</button>
       </div>
+
+      <div id="additional-info" class="additional-info"></div>
     </div>
 
     <!-- Right: textual info -->
@@ -41,9 +44,11 @@
   <!-- Our SVG pan zoom logic-->
   <script src="../lib/zoom-pan-lib.js"></script>
 
-  <!-- Load B3 Keys -->
-  <script src="../key/keys.js"></script>
+  <script src="../lib/api-utils.js"></script>
   
+  <!-- Load B3 Keys -->
+  <script src="../configs/configs.js"></script>
+
   <!-- D3 + shared svg-renderer + our type-catalog script -->
   <script src="../lib/svg-renderer.js"></script>
   <script src="single-part.js"></script>

@@ -69,6 +69,8 @@ async function fetchColorDesigns(partId) {
   return res.json();
 }
 
+
+
 // DOM Builders
 function createTypeRowDOM(typeObj) {
   const rowSection = document.createElement("section");
@@ -111,13 +113,13 @@ function createTypeRowDOM(typeObj) {
   const leftArrow = document.createElement("div");
   leftArrow.className = "arrow arrow-left";
   leftArrow.innerHTML = "&lt;";
-  leftArrow.onclick = () => alert(`Left arrow for ${typeObj.name}`);
+  leftArrow.onclick = () => alert(`(PlaceHolder CODE) Left arrow for ${typeObj.name}`);
   rowArrows.appendChild(leftArrow);
 
   const rightArrow = document.createElement("div");
   rightArrow.className = "arrow arrow-right";
   rightArrow.innerHTML = "&gt;";
-  rightArrow.onclick = () => alert(`Right arrow for ${typeObj.name}`);
+  rightArrow.onclick = () => alert(`(PlaceHolder CODE) Right arrow for ${typeObj.name}`);
   rowArrows.appendChild(rightArrow);
 
   rowHeader.appendChild(rowArrows);
@@ -168,7 +170,7 @@ function createPartCell(partObj) {
   const left = document.createElement("div");
   left.className = "color-arrow color-arrow-left";
   left.innerHTML = "&#9664;";
-  left.onclick = () => alert(`Left color for ${partObj.name}`);
+  left.onclick = () => alert(`(PlaceHolder CODE) Left color for ${partObj.name}`);
 
   const label = document.createElement("div");
   label.className = "color-states";
@@ -177,7 +179,7 @@ function createPartCell(partObj) {
   const right = document.createElement("div");
   right.className = "color-arrow color-arrow-right";
   right.innerHTML = "&#9654;";
-  right.onclick = () => alert(`Right color for ${partObj.name}`);
+  right.onclick = () => alert(`(PlaceHolder CODE) Right color for ${partObj.name}`);
 
   colorCarousel.appendChild(left);
   colorCarousel.appendChild(label);
@@ -202,7 +204,7 @@ async function renderGrandCatalog() {
   let types;
   try {
     types = await fetchGraphicalPartTypes();
-    console.log("GraphicalPartTypes returned:", types);
+    //console.log("GraphicalPartTypes returned:", types);
   } catch (err) {
     console.error("Failed to fetch GraphicalPartTypes:", err);
     return;
@@ -217,15 +219,24 @@ async function renderGrandCatalog() {
 
   // For each type, create row
   for (const t of types) {
+
+    if (SKIP_TYPES.includes(t.name.toLowerCase())) {
+        //console.log(`Skipping type: ${t.name}`);
+        continue;
+      }
+
     const { rowSection, grid } = createTypeRowDOM(t);
     container.appendChild(rowSection);
     try {
       const parts = await tryFindParts(t.graphical_type_id);
       if (parts.length === 0) {
-        console.log(`No parts found for type ${t.name}`);
+        console.error(`No parts found for type ${t.name}`);
         continue;
       }
-      console.log(`Parts for ${t.name} (#${t.graphical_type_id}):`, parts);
+ 
+        // ... after you fetch a list/array "parts"
+        const partIds = parts.map(p => p.graphical_part_id);
+        const colorDesignMap = await fetchColorDesignsBulk(partIds);
 
       for (const p of parts) {
         const { cell, containerId, resetBtn } = createPartCell(p);
@@ -233,12 +244,13 @@ async function renderGrandCatalog() {
         grid.appendChild(cell);
 
         // 2) Fetch color design
-        let cDesigns = [];
-        try {
-          cDesigns = await fetchColorDesigns(p.graphical_part_id);
-        } catch(e) {
-          console.warn("No color designs for part", p.name);
-        }
+        // let cDesigns = [];
+        // try {
+        //   cDesigns = await fetchColorDesigns(p.graphical_part_id);
+        // } catch(e) {
+        //   console.error("No color designs for part", p.name);
+        // }
+        const cDesigns = colorDesignMap[p.graphical_part_id] || [];
 
         let usedDesign = null;
         if (p.standard_color_design) {
@@ -250,9 +262,9 @@ async function renderGrandCatalog() {
         const colorData = usedDesign ? usedDesign.color_data : { _line_group:[], _color_group:[] };
 
         // 3) Actually render the SVG
-        if (p.graphical_data) {
-            const { resetViewFill, resetViewLine } = await renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, t.name);
-        }
+        
+        const { resetViewFill, resetViewLine } = await renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, t.name);
+        
 
         resetBtn.onclick = () => {
             if (resetViewFill) resetViewFill();

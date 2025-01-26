@@ -4,5 +4,6 @@ const ACCESS_CODE = "6tosDJj29gvSJ7xdu3LsO0LoVgZOoeB8"; // Public UI Only
 
 // Configs
 
+const TARGET = "_blank" // (tab target) Always open new tab ["_blank","_self"]
 
-const TARGET = "_blank" // (tab target) Always open new tab
+const SKIP_TYPES = ["eyes","mask","neck"]; // all lowercase

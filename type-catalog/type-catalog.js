@@ -32,7 +32,7 @@ async function fetchPartsForTypeNumberIn(typeId, inArray) {
   const inParam = inArray.join(',');
   // e.g. ?graphical_type_id=10&type_number__in=1,2,3,4,5
   const url = `${API_BASE}graphical-parts/?graphical_type_id=${typeId}&type_number__in=${inParam}&access_code=${ACCESS_CODE}`;
-  console.log("Fetching parts from:", url);
+  //console.log("Fetching parts from:", url);
 
   const res = await fetch(url, {
     method: "GET",
@@ -62,7 +62,7 @@ async function renderTypeCatalog() {
     document.getElementById("type-title").textContent = typeObj.name;
     document.getElementById("type-info").textContent = `Compartment: ${typeObj.graphical_schema_data?._compart || "???"}`;
   } catch (err) {
-    console.warn("Could not fetch typeObj details:", err);
+    console.error("Could not fetch typeObj details:", err);
     document.getElementById("type-title").textContent = `GraphicalPartType #${typeId}`;
     document.getElementById("type-info").textContent = "No details found.";
   }
@@ -72,7 +72,7 @@ async function renderTypeCatalog() {
   const container = document.getElementById("type-grid");
 
   // 1) array of type numbers you want
-  const range1To5 = [1,2,3,4,5,6,7,8,9,10];
+  const range1To5 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
   // or maybe [6,7,8,9,10], etc. 
   // or you can build multiple arrays in a loop
 
@@ -80,10 +80,14 @@ async function renderTypeCatalog() {
   try {
     const parts = await fetchPartsForTypeNumberIn(typeId, range1To5);
     if (parts.length === 0) {
-      console.log(`No parts found for type #${typeId} in numbers [${range1To5}]`);
+      console.error(`No parts found for type #${typeId} in numbers [${range1To5}]`);
       return;
     }
-    console.log(`Parts for typeId=${typeId}, type_number in [${range1To5}]:`, parts);
+    //console.log(`Parts for typeId=${typeId}, type_number in [${range1To5}]:`, parts);
+
+    const partIds = parts.map(p => p.graphical_part_id);
+
+    const colorDesignMap = await fetchColorDesignsBulk(partIds);
 
     for (const p of parts) {
       // Create the cell
@@ -110,7 +114,8 @@ async function renderTypeCatalog() {
       // (C) Author line
       const authorLine = document.createElement("p");
       authorLine.className = "author-line";
-      authorLine.textContent = `Author: ${p.owned_by ?? "???"}`;
+      //authorLine.textContent = `Author: ${p.owned_by ?? "???"}`;
+      authorLine.textContent = `Author: B3 Lite & Amote Studio`;
       cell.appendChild(authorLine);
 
       // (D) Reset View button
@@ -123,12 +128,15 @@ async function renderTypeCatalog() {
       container.appendChild(cell);
 
       // Now fetch color designs for this part
-      let cDesigns = [];
-      try {
-        cDesigns = await fetchColorDesignsForPart(p.graphical_part_id);
-      } catch(e) {
-        console.warn("No color designs for part", p.name, e);
-      }
+      // let cDesigns = [];
+      // try {
+      //   cDesigns = await fetchColorDesignsForPart(p.graphical_part_id);
+      // } catch(e) {
+      //   console.error("No color designs for part", p.name, e);
+      // }
+
+      const cDesigns = colorDesignMap[p.graphical_part_id] || [];
+
       let usedDesign = null;
       if (p.standard_color_design) {
         usedDesign = cDesigns.find(cd => cd.color_design_id === p.standard_color_design);
@@ -141,11 +149,15 @@ async function renderTypeCatalog() {
       // Render the <svg> 
       // We'll pass typeObj?.name or fallback
       if (p.graphical_data) {
-        console.log(`Render part ${p.name}, container "#${containerId}"`);
+        //console.log(`Render part ${p.name}, container "#${containerId}"`);
         const guessName = typeObj?.name || "unknown";
-        const { resetView } = renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, guessName.toLowerCase());
+        const { resetViewFill, resetViewLine  } = renderGraphicalPartSVG(`#${containerId}`, p.graphical_data, colorData, guessName.toLowerCase());
         // Attach reset
-        resetBtn.onclick = () => resetView();
+        // Hook the reset button
+        resetBtn.onclick = () => {
+          if (resetViewFill) resetViewFill();
+          if (resetViewLine) resetViewLine();
+        };
       }
 
       

@@ -100,4 +100,55 @@
     color: #888;
     margin-bottom: 5px;
   }
+
+  .home-button {
+    text-decoration: none;
+    color: #fff;
+    background-color: #444;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-top: 20px; /* space before the main heading */
+    margin-right: 20px; /* space before the main heading */
+    font-weight: bold;
+    transition: background-color 0.2s;
+    display: inline-block;
+  }
+  .home-button:hover {
+    background-color: #666;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* or justify-content: flex-start if you prefer */
+  }
   
+  .type-cell .part-name a {
+    text-decoration: none;
+    color: #007acc;
+    padding: 5px 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  .type-cell .part-name a:hover {
+    text-decoration: none;
+    background-color: #e0f0ff;
+    border-color: #007acc;
+    color: #005c99;
+  }
+
+  .arrow-left, .arrow-right {
+    cursor: pointer;
+    display: inline-block;
+    padding: 4px 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 0 5px;
+    user-select: none;
+    transition: background-color 0.2s;
+  }
+  .arrow-left:hover, .arrow-right:hover {
+    background-color: #eee;
+  }

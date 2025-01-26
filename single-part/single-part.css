@@ -46,31 +46,39 @@
   main.split-container {
     display: flex;
     gap: 20px;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
   }
   
+  /* 30% left, 70% right */
   .left-column {
-    flex: 0 0 50%;
+    flex: 0 0 30%;
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
-  #big-svg-container {
-    width: 100%;
-    height: 400px;
-    border: 1px dashed #ccc;
-    position: relative;
-    overflow: hidden;
+  .right-column {
+    flex: 1; /* i.e., 70% or so */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .right-column {
-    flex: 1;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  #big-svg-container {
+    position: relative;
+    width: 100%;
+    height: 450px; /* or 500px, etc. Adjust as you like */
+    border: 1px dashed #ccc;
+    overflow: hidden;
+  }
+
+  /* Force the SVG inside to fill the container */
+  #big-svg-container svg {
+    width: 100%;
+    height: 100%;
+    /* preserveAspectRatio if you want: */
+    /* e.g. .attr("preserveAspectRatio", "xMidYMid meet") in JS */
   }
   
   #reset-view-btn {
@@ -80,6 +88,29 @@
     background-color: #eee;
     border-radius: 4px;
     cursor: pointer;
+  }
+
+  /* Make raw JSON blocks fill more horizontally */
+  #json-output,
+  #color-json-output {
+    width: 100%;
+    max-width: 100%;
+    min-height: 200px;
+    flex: 0 0 auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 8px;
+    overflow: auto;
+  }
+
+  /* Additional info styles */
+  .additional-info {
+    margin-top: 10px;
+    padding: 6px;
+    background-color: #fdfdfd;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    border-radius: 4px;
   }
   
   /* Thumbs up/down row */
@@ -126,3 +157,25 @@
     max-height: 300px;
   }
   
+  .home-button {
+    text-decoration: none;
+    color: #fff;
+    background-color: #444;
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-top: 20px; /* space before the main heading */
+    margin-right: 20px; /* space before the main heading */
+    font-weight: bold;
+    transition: background-color 0.2s;
+    display: inline-block;
+  }
+  .home-button:hover {
+    background-color: #666;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* or justify-content: flex-start if you prefer */
+  }
