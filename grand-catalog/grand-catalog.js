@@ -2,21 +2,6 @@
  * grand-catalog.js
  *****************************************/
 
-const ANIM_STYLE_ID = 3;
-
-const ROWS_PER_FETCH = 5;
-
-const TYPE_ORDER = {
-  eyes: 12,
-  mouth: 2,
-  eyebrows: 3,
-  hair: 4,
-  shirt: 5,
-  sleeves: 6,
-  pants: 7,
-  shoes: 8,
-};
-
 async function fetchGraphicalPartTypes() {
   const url = `${API_BASE}graphical-part-type/?anim_style_id=${ANIM_STYLE_ID}&access_code=${ACCESS_CODE}`;
   const res = await fetch(url, {
