@@ -25,8 +25,26 @@ export function populateMockAnimationList() {
             parameters: ["startTime", "height", "duration"],
         },
         {
-            id: "fadeIn",
-            name: "Fade In",
+            id: "fadeIn2",
+            name: "Fade In2",
+            longName: "cutaway.tools.effects.fadeIn",
+            parameters: ["startTime", "duration", "opacityEnd"],
+        },
+        {
+            id: "walk2",
+            name: "Walk Cycle2",
+            longName: "cutaway.tools.character.walk",
+            parameters: ["startTime", "duration", "speed"],
+        },
+        {
+            id: "jump2",
+            name: "Jump2",
+            longName: "cutaway.tools.character.jump",
+            parameters: ["startTime", "height", "duration"],
+        },
+        {
+            id: "fadeIn2",
+            name: "Fade In2",
             longName: "cutaway.tools.effects.fadeIn",
             parameters: ["startTime", "duration", "opacityEnd"],
         }

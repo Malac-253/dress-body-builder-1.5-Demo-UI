@@ -79,4 +79,19 @@ document.addEventListener("DOMContentLoaded", () => {
   btnAddSound?.addEventListener("click", () => {
     Logger.warn("[Sound] Add Sound clicked");
   });
+
+  // Fix: Ensure frame loading bar stays visible during timeline rendering.
+  // const frameLoading = document.getElementById("frameLoading");
+  // if(frameLoading) {
+  //     frameLoading.style.display = "inline-block";
+  //     // Instead of an immediate setTimeout hide, fade it out.
+  //     setTimeout(() => {
+  //        frameLoading.style.transition = "opacity 0.5s ease-out";
+  //        frameLoading.style.opacity = "0";
+  //        // After fade-out, set display none.
+  //        setTimeout(() => {
+  //          frameLoading.style.display = "none";
+  //        }, 500);
+  //     }, 1000);
+  // }
 });
