@@ -1,0 +1,154 @@
+/* alphaStyles.css - Global & Color Theme */
+
+/* Root Variables for Pink, Purple, Navy */
+:root {
+    --primary-pink: #fd79a8;
+    --primary-purple: #a29bfe;
+    --primary-navy: #2c3e50;
+    --light-bg: #f8f8ff;
+    --dark-text: #2d3436;
+    --border-color: #dfe6e9;
+    --dotted-box-color: #ccc;
+}
+
+/* GLOBAL RESETS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* HEADER */
+.app-header {
+    background-color: var(--primary-navy);
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 1.5em;
+}
+
+/* LAYOUT */
+.app-container {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+/* PANELS */
+.left-panel {
+    width: 25%;
+    padding: 10px;
+    background-color: #fdfdfd;
+    overflow-y: auto;
+}
+
+.middle-panel {
+    width: 55%;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+}
+
+.right-panel {
+    width: 20%;
+    padding: 10px;
+    background-color: #fdfdfd;
+    overflow-y: auto;
+}
+
+/* HEADINGS */
+h1, h2 {
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* DOTTED BOX STYLE */
+.dotted-box {
+    border: 2px dashed var(--dotted-box-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+/* LAYERS TREE STYLES */
+.layers-tree {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 5px;
+    background-color: #f9f9f9;
+}
+
+/* LAYER ITEMS */
+.layer-item {
+    background-color: #eef1fd;
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    border: 1px solid var(--border-color);
+}
+
+.layer-item:hover {
+    background-color: #e2e6fa;
+}
+
+/* COLLAPSIBLE TREE STRUCTURE */
+.layer-children {
+    margin-left: 20px;
+    border-left: 1px dashed var(--border-color);
+    padding-left: 10px;
+}
+
+/* LAYER EXPAND/COLLAPSE ICON */
+.arrow-icon {
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.arrow-icon.collapsed::before {
+    content: "▶"; /* Collapsed state */
+}
+
+.arrow-icon::before {
+    content: "▼"; /* Expanded by default */
+}
+
+/* PLACEHOLDER TEXT */
+.placeholder {
+    color: #b2bec3;
+    font-style: italic;
+}
+
+/* RESPONSIVE FIXES */
+@media screen and (max-width: 800px) {
+    .app-container {
+        flex-direction: column;
+    }
+
+    .left-panel,
+    .right-panel {
+        width: 100%;
+    }
+
+    .middle-panel {
+        width: 100%;
+    }
+}

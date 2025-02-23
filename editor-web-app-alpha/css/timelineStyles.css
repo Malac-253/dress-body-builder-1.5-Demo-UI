@@ -1,0 +1,157 @@
+/* timelineStyles.css - Timeline & Scrubber */
+
+.timeline-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+/* TIMELINE CONTAINER */
+.timeline-container {
+    position: relative;
+    background-color: var(--primary-purple);
+    border-radius: 5px;
+    padding: 10px;
+    min-height: 180px;
+    overflow-x: auto;
+    color: #fff;
+    border: 1px solid #ccc;
+}
+
+/* TIMELINE NUMBER MARKERS */
+.timeline-numbers {
+    position: absolute;
+    top: 0; /* Move it to the top */
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #777;
+    z-index: 10; /* Ensure it's above the tracks */
+}
+
+.timeline-horizontal-line {
+    position: absolute;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 100%;
+    top: 0;
+}
+
+.timeline-time-marker {
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background-color: #fff;
+    top: 0;
+}
+
+.timeline-time-label {
+    position: absolute;
+    font-size: 12px;
+    color: #fff;
+    top: 35px;
+    transform: translateX(-50%);
+}
+
+/* TIMELINE TRACKS */
+.timeline-tracks {
+    position: relative;
+    min-height: 150px;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+}
+
+.timeline-animation {
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    text-align: center;
+    color: black;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 2px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Align resize handles */
+}
+
+/* Drag handles */
+.timeline-handle {
+    width: 6px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    cursor: ew-resize;
+}
+
+.timeline-handle-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.timeline-handle-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/* TRACK ROWS */
+.track-row {
+    position: relative;
+    height: 50px;
+    border-bottom: 1px solid #ccc;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    padding-left: 5px;
+}
+
+/* SCRUBBER */
+.scrubber {
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    background-color: var(--primary-pink);
+    left: 0;
+    top: 0;
+    cursor: grab;
+    z-index: 100;
+}
+
+.scrubber::before {
+    content: "▲";
+    position: absolute;
+    top: -12px;
+    left: -6px;
+    color: var(--primary-pink);
+    font-size: 14px;
+}
+
+/* TIMELINE EVENT BLOCKS */
+.timeline-animation {
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    font-size: 12px;
+    text-align: center;
+    color: black;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 2px;
+    white-space: nowrap;
+}
+
+/* COLORS */
+.timeline-animation[data-type="Animation"] {
+    background-color: #ffb3ba;
+}
+
+.timeline-animation[data-type="Text"] {
+    background-color: #bae1ff;
+}

@@ -1,0 +1,319 @@
+/* alphaStyles.css */
+
+/* Basic reset-ish */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-color: #fefefe;    /* near-white/cream */
+  --accent-color: #ffcce0; /* pinkish */
+  --highlight-color: #b3e5fc; /* pale light-blue */
+  --text-color: #333;
+  --highlight-color-hover: #ff99cc; /* Example hover color */
+}
+
+body {
+  font-family: sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.app-header {
+  background: #333;
+  color: #eee;
+  padding: 10px;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 20% 50% 30%;
+  grid-gap: 10px;
+  padding: 10px;
+}
+
+/* Left Column */
+.left-column, .middle-column, .right-column {
+  background: #f9f9f9;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.left-column h2 {
+  margin-bottom: 5px;
+}
+
+.animation-list,
+.parameter-editor {
+  margin-bottom: 20px;
+}
+
+.animation-items {
+  border: 1px solid #bbb;
+  padding: 5px;
+  min-height: 50px;
+  background: #fff;
+}
+
+.animation-items .anim-item {
+  background: #dfe;
+  margin: 4px;
+  padding: 4px;
+  cursor: grab;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+}
+
+/* Middle Column */
+.preview-section {
+  flex: 1;
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 10px;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.preview-header button {
+  margin-right: 5px;
+}
+
+.loading-bar {
+  background: #ffcbcb;
+  color: #880000;
+  padding: 0 6px;
+  border: 1px solid #c00;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.preview-canvas-container {
+  text-align: center;
+  border: 1px solid #bbb;
+  height: 260px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#previewCanvas {
+  background: #fff;
+  border: 1px dashed #888;
+}
+
+/* Timeline */
+.timeline-section h2 {
+  margin-bottom: 6px;
+}
+
+/* Adjusted timeline container and track styling */
+.timeline-tracks {
+  position: relative;
+  height: 100px;  /* Adjusted height for better visibility */
+  background: #fff;
+  white-space: nowrap;
+  width: 1000px;
+}
+
+.timeline-item {
+  display: inline-block;
+  border-radius: 4px;
+  background: var(--accent-color);
+  color: var(--text-color);
+  padding: 0.3rem;
+  position: absolute;
+  cursor: pointer;
+  height: 100%;
+}
+
+.timeline-container {
+  position: relative;
+  overflow-x: auto;
+  white-space: nowrap;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* A single timeline track row */
+.track-row {
+  position: relative;
+  height: 30px;
+  margin-bottom: 2px;
+  background: #f8f8f8;
+  border: 1px solid #ccc;
+}
+
+/* Draggable block on the timeline */
+.timeline-block {
+  background: #cddffa;
+  border: 1px solid #67a;
+  position: absolute;
+  height: 23px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.timeline-time-marker {
+  position: absolute;
+  top: 0;
+  height: 10px;
+  width: 1px;
+  background: #333;
+}
+
+.timeline-time-label {
+  position: absolute;
+  top: 0;
+  font-size: 0.7rem; /* smaller font size */
+  color: #333;
+  transform: translate(-50%, 12px); /* center horizontally and shift vertically */
+}
+
+.timeline-horizontal-line {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: #ccc;
+  z-index: 1; /* Ensure lines are on top of the blocks */
+}
+
+.timeline-numbers {
+  position: relative;
+  height: 30px;  /* Increase height if needed */
+  width: 1000px; /* Set width to 20 markers * 50px each */
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+  overflow: visible; /* Allow numbers to show */
+  border: 1px solid #ccc; /* Added border for a box effect */
+  border-radius: 4px;     /* Rounded corners */
+  padding: 2px;
+}
+
+.timeline-number {
+  position: absolute;
+  top: 0;
+  font-size: 0.8rem;
+  color: #333;
+  white-space: nowrap; /* Ensure numbers do not wrap */
+}
+
+.tree-layers {
+  margin-bottom: 10px;
+}
+
+.final-render button {
+  display: block;
+  margin: 6px 0;
+}
+
+.parameter-editor #paramForm p {
+  margin-bottom: 10px;
+}
+
+.rounded-panel {
+  border-radius: 8px;
+  background: var(--highlight-color);
+  padding: 0.75rem;
+  margin: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+.rounded-panel:hover {
+  background: var(--highlight-color-hover);
+}
+
+.scrubber {
+  position: absolute;
+  width: 12px;                /* Thicker for drag handle */
+  height: 100%;
+  background: #800020;        /* Burgundy color */
+  cursor: ew-resize;
+  z-index: 100;               /* On top of timeline elements */
+  display: flex;
+  align-items: flex-start;    /* Align arrow at top */
+  justify-content: center;
+  border-top: 2px solid red;  /* Top line to indicate timeline track */
+  top: 0;                     /* Ensure it's flush with the top of the timeline */
+}
+.scrubber::before {
+  content: "➤";              /* Arrow icon */
+  color: white;
+  font-size: 14px;
+  margin-top: -8px;          /* Adjust to position above timeline */
+}
+
+/* Resizer styling for left and right */
+.timeline-resizer.left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  cursor: ew-resize;
+}
+.timeline-resizer.right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background: rgba(0,0,0,0.3);
+  cursor: ew-resize;
+}
+
+.timeline-scale-control {
+  margin-top: 10px;
+  text-align: center;
+}
+.timeline-scale-control label {
+  margin-right: 6px;
+  font-size: 0.9rem;
+}
+
+/* New styles for timeline header and controls */
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.timeline-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timeline-scale-control label {
+  font-size: 0.9rem;
+  margin-right: 4px;
+}
+
+.timeline-loading .loading-indicator {
+  font-size: 0.8rem;
+  color: #880000;
+  background: #ffcbcb;
+  padding: 2px 4px;
+  border: 1px solid #c00;
+  border-radius: 4px;
+}

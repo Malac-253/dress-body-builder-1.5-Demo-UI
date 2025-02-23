@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B3 Amote Studio Editor</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/alphaStyles.css">
+    <link rel="stylesheet" href="css/timelineStyles.css">
+    <link rel="stylesheet" href="css/uiStyles.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <h1> Amote Studio - Editor (Alpha)</h1>
+    </header>
+
+    <div class="app-container">
+
+        <!-- LEFT PANEL: Animations & Parameters -->
+        <aside class="left-panel">
+            <section class="animation-list dotted-box">
+                <h2>Available Animations</h2>
+                <div class="animation-search">
+                    <input type="text" id="animationSearch" placeholder="Search animations...">
+                </div>
+                <div id="animationItems" class="animation-items">
+                    <p class="placeholder">No animations loaded</p>
+                </div>
+            </section>
+
+            <section class="parameter-editor dotted-box">
+                <h2>Parameters</h2>
+                <div id="paramForm">
+                    <p>Select an animation to edit parameters.</p>
+                </div>
+                <button id="applyParamsBtn" style="display:none;">Apply</button>
+            </section>
+        </aside>
+
+        <!-- MIDDLE PANEL: Timeline & Preview -->
+        <main class="middle-panel">
+
+            <!-- PREVIEW SECTION -->
+            <section class="preview-section dotted-box">
+                <div id="previewCanvasContainer">
+                    <canvas id="previewCanvas" width="1000" height="500"></canvas>
+                </div>
+                <div class="preview-header">
+                    <button id="btnJumpStart">⏮</button>
+                    <button id="btnBack10">-10s</button>
+                    <button id="btnRewind">⏪</button>
+                    <button id="btnPlay">▶️</button>
+                    <button id="btnPause" style="display: none;">⏸️</button>
+                    <button id="btnForward">⏩</button>
+                    <button id="btnForward10">+10s</button>
+                    <button id="btnJumpEnd">⏭</button>
+                    <span id="currentTime">00:00:00:000</span>
+                </div>
+            </section>
+
+            <!-- TIMELINE SECTION -->
+            <section class="timeline-section dotted-box">
+                <div class="timeline-controls">
+                    <h2>Timeline</h2>
+                    <label for="scaleSlider">Scale:</label>
+                    <input type="range" id="scaleSlider" min="0.5" max="2" step="0.1" value="1">
+                    <div id="frameLoading" class="frame-loading-bar" style="display:none;">
+                        <label>Frame Rendering</label>
+                        <progress value="0" max="100"></progress>
+                    </div>
+                </div>
+                <div id="timelineContainer" class="timeline-container">
+                    <div id="timelineNumbers" class="timeline-numbers"></div>
+                    <div id="timelineTracks" class="timeline-tracks">
+                        <div id="scrubber" class="scrubber"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PREVIEW SVG DEV MODE (Separate from Main Canvas) -->
+            <section id="previewSVGContainer" class="dotted-box" style="display: none;">
+                <h2>Preview SVG</h2>
+                <div id="previewSVGWrapper">
+                    <svg id="previewSVG" width="400" height="250" style="background-color: #fafafa; border: 1px solid #ccc;"></svg>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- RIGHT PANEL: Layers & Export -->
+        <aside class="right-panel">
+            <section class="export-options dotted-box">
+                <button id="btnExportMP4">Render to MP4</button>
+                <button id="btnAddSound">Add Sound</button>
+            </section>
+
+            <section class="layers-tree dotted-box">
+                <div class="layers-header">
+                    <h2>Layers</h2>
+                    <!-- <input type="text" id="layerSearch" placeholder="Search layers..." /> -->
+                </div>
+                <div id="layersTree"></div>
+            </section>
+
+            <section class="timeline-debug dotted-box">
+                <h2>Timeline Debug</h2>
+                <pre id="timelineDebug"></pre>
+            </section>
+        </aside>
+    </div>
+
+    <!-- Hidden SVG for debugging -->
+    <svg id="hiddenSVG" width="400" height="250" style="display:none;"></svg>
+
+    <!-- Main script -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

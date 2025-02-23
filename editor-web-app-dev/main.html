@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alpha Timeline Editor Prototype</title>
+  <link rel="stylesheet" href="alphaStyles.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>Alpha Timeline Editor (Proof of Concept)</h1>
+  </header>
+
+  <div class="app-container">
+    <!-- LEFT COLUMN: Animations & Parameter Editing -->
+    <aside class="left-column">
+      <section class="animation-list">
+        <h2>Available Animations</h2>
+        <!-- We'll have a container for draggable items here -->
+        <div class="animation-search">
+          <input type="text" id="animationSearch" placeholder="Search animations...">
+        </div>
+        <div id="animationItems" class="animation-items">
+          <!-- The controller/view will populate these from the Model -->
+        </div>
+      </section>
+
+      <section class="parameter-editor">
+        <h2>Parameters</h2>
+        <div id="paramForm">
+          <!-- The controller will fill in parameter fields when user selects something -->
+          <p>Select an item to see parameters.</p>
+        </div>
+        <!-- A hidden button that might be used to apply or confirm changes -->
+        <button id="applyParamsBtn" style="display:none;">Apply/Submit</button>
+      </section>
+    </aside>
+
+    <!-- MIDDLE COLUMN: Timeline & Preview -->
+    <main class="middle-column">
+      <section class="preview-section">
+        <div class="preview-header">
+          <button id="btnRewind">⏪</button>
+          <!-- New button for back 10s -->
+          <button id="btnBack10">⏮️</button>
+          <button id="btnPlay">▶️</button>
+          <button id="btnForward">⏩</button>
+
+          <span id="loadingInfo" class="loading-bar" style="display:none;">
+            Rendering frames...
+          </span>
+        </div>
+
+        <div id="previewCanvasContainer" class="preview-canvas-container">
+          <!-- A placeholder to show the user the 'preview' -->
+          <canvas id="previewCanvas" width="400" height="250"></canvas>
+        </div>
+      </section>
+
+      <section class="timeline-section">
+        <!-- New timeline header with title and controls -->
+        <div class="timeline-header">
+          <h2>Timeline</h2>
+          <div class="timeline-controls">
+            <div class="timeline-scale-control">
+              <label for="scaleSlider">Scale:</label>
+              <input type="range" id="scaleSlider" min="0.5" max="2" step="0.1" value="1">
+            </div>
+            <div class="timeline-loading">
+              <span id="frameLoading" class="loading-indicator">Loading...</span>
+            </div>
+          </div>
+        </div>
+        <div id="timelineContainer" class="timeline-container">
+          <div id="timelineNumbers" class="timeline-numbers">
+            <!-- Time markers and labels will be added here -->
+          </div>
+          <div id="timelineTracks" class="timeline-tracks">
+            <!-- Pre-insert scrubber element so it's present on load -->
+            <div class="scrubber" id="scrubber"></div>
+            <!-- ...existing track rows will be created dynamically... -->
+          </div>
+        </div>
+      </section>
+
+      <section class="svg-preview-section">
+        <h2>SVG Preview</h2>
+        <div id="svgPreviewContainer" class="svg-preview-container">
+          <svg id="svgPreview" width="400" height="250"></svg>
+        </div>
+      </section>
+    </main>
+
+    <!-- RIGHT COLUMN: Tree/Layer Info -->
+    <aside class="right-column">
+      <section class="tree-layers">
+        <h2>Layers / Tree</h2>
+        <div id="layersTree">
+          <!-- The view might display a collapsible tree of your hidden SVG structure or layers. -->
+          <p>Placeholder collapsible tree info here...</p>
+        </div>
+      </section>
+
+      <section class="final-render">
+        <button id="btnExportMP4">Render to MP4</button>
+        <button id="btnAddSound">Add Sound</button>
+      </section>
+
+      <section class="timeline-debug">
+        <h2>Timeline Debug</h2>
+        <pre id="timelineDebug"></pre>
+      </section>
+    </aside>
+  </div>
+
+  <!-- We'll keep a hidden <svg> for dev/alpha usage, if needed -->
+  <svg id="hiddenSVG" width="400" height="250" style="display:none;">
+    <!-- Placeholder: your code can manipulate this. -->
+    <!-- For example, we might have a path that moves. -->
+  </svg>
+
+  <!-- Scripts (MVC-based) -->
+  <script src="mvc-model.js"></script>
+  <script src="mvc-view.js"></script>
+  <script src="mvc-controller.js"></script>
+  <script>
+    // On load, initialize everything
+    document.addEventListener('DOMContentLoaded', () => {
+      Controller.init();
+    });
+  </script>
+</body>
+</html>
