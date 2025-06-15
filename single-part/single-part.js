@@ -1,6 +1,9 @@
 /****************************************************
  * single-part.js
- *
+ * Supports two URL params now:
+ *   • part_id=123          ← REQUIRED
+ *   • color_design_id=42   ← OPTIONAL
+ * 
  * This page shows:
  *   - The name/author of the part
  *   - A big <svg> in #big-svg-container
@@ -8,11 +11,13 @@
  *   - Raw JSON dump
  ****************************************************/
 
-// 1) Parse part_id from URL
-function getPartIdFromURL() {
+
+function getQueryParam(key) {
   const params = new URLSearchParams(window.location.search);
-  return params.get("part_id");
+  return params.get(key);
 }
+const getPartIdFromURL        = () => getQueryParam("part_id");
+const getColorDesignIdFromURL = () => getQueryParam("color_id");  // ★NEW★
 
 // 2) Fetch the single part
 async function fetchOnePart(id) {
@@ -24,9 +29,18 @@ async function fetchOnePart(id) {
 
 // 3) Fetch color designs
 async function fetchColorDesigns(partId) {
-  const url = `https://dress-body-builder-2.onrender.com/api/color-designs/?graphical_part_id=${partId}&access_code=${ACCESS_CODE}`;
+  const qs  = new URLSearchParams({ graphical_part_id: partId, access_code: ACCESS_CODE });
+  const url = `https://dress-body-builder-2.onrender.com/api/color-designs/?${qs}`;
   const res = await fetch(url, { headers: { Authorization: `Token ${GUEST_USER_TOKEN}` }});
   if (!res.ok) return [];
+  return res.json();
+}
+
+// ★NEW★ – fetch a single colour-design by id
+async function fetchOneColorDesign(id) {
+  const url = `https://dress-body-builder-2.onrender.com/api/color-designs/${id}/?access_code=${ACCESS_CODE}`;
+  const res = await fetch(url, { headers: { Authorization: `Token ${GUEST_USER_TOKEN}` } });
+  if (!res.ok) throw new Error("Failed to fetch colour design " + id);
   return res.json();
 }
 
@@ -34,6 +48,8 @@ async function fetchColorDesigns(partId) {
 // 4) Render function
 async function renderSinglePart() {
   const partId = getPartIdFromURL();
+  const forcedCdIdRaw  = getColorDesignIdFromURL();         // ★NEW★
+  const forcedCdId     = forcedCdIdRaw ? Number(forcedCdIdRaw) : null;
   if (!partId) {
     document.getElementById("part-title").textContent = "No part_id specified";
     return;
@@ -56,14 +72,35 @@ async function renderSinglePart() {
   document.getElementById("json-output").textContent = JSON.stringify(partData, null, 2);
 
   let designs = [];
-  try {
-    designs = await fetchColorDesigns(partId);
-  } catch {}
+
   let usedDesign = null;
-  if (partData.standard_color_design) {
-    usedDesign = designs.find(cd => cd.color_design_id === partData.standard_color_design);
+
+  if (forcedCdId) {
+    try {
+      const forcedDesign = await fetchOneColorDesign(forcedCdId);
+      if (String(forcedDesign.graphical_part_id) === String(partId)) {
+        usedDesign = forcedDesign;
+        // Add it to the designs array if it wasn’t in the list (for completeness)
+        if (!designs.some(d => d.id === forcedCdId)) designs.push(forcedDesign);
+      } else {
+        console.warn(
+          `color_design_id=${forcedCdId} does not belong to part_id=${partId}. Ignoring parameter.`
+        );
+      }
+    } catch (e) {
+      console.warn("Could not fetch forced colour design:", e);
+    }
+  }else{
+    try {
+      designs = await fetchColorDesigns(partId);
+    } catch {}
+
+    if (partData.standard_color_design) {
+      usedDesign = designs.find(cd => cd.color_design_id === partData.standard_color_design);
+    }
+
+    if (!usedDesign && designs.length > 0) usedDesign = designs[0];
   }
-  if (!usedDesign && designs.length > 0) usedDesign = designs[0];
 
   if (usedDesign) {
     document.getElementById("color-json-output").textContent = JSON.stringify(usedDesign, null, 2);
