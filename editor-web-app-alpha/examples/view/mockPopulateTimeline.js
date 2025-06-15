@@ -1,8 +1,9 @@
 // mockPopulateTimeline.js - Populates the timeline UI dynamically from a structured timeline data object.
 import Logger from "../../js/logger.js";
+const log = Logger.createLogger("mockPopulateTimeline");
 
 export function populateMockTimeline() {
-    Logger.trace("[MOCK] populateMockTimeline called");
+    log.trace("[MOCK] populateMockTimeline called");
 
     const timelineContainer = document.getElementById("timelineContainer");
     const timelineNumbers = document.getElementById("timelineNumbers");
@@ -11,7 +12,7 @@ export function populateMockTimeline() {
     const frameLoading = document.getElementById("frameLoading");
 
     if (!timelineContainer || !timelineNumbers || !timelineTracks || !timelineDebug) {
-        Logger.error("[MOCK] timeline containers not found");
+        log.error("[MOCK] timeline containers not found");
         return;
     }
 
@@ -20,7 +21,6 @@ export function populateMockTimeline() {
     timelineTracks.innerHTML = "";
     timelineDebug.innerHTML = "";
 
-    // Timeline Data Structure
     // Timeline Data Structure
     const timelineData = {
         tracks: [
@@ -164,7 +164,7 @@ export function populateMockTimeline() {
             let newLeft = event.clientX - shiftX - timelineTracks.getBoundingClientRect().left;
             newLeft = Math.max(0, Math.min(newLeft, containerWidth));
             scrubber.style.left = newLeft + "px";
-            Logger.info(`[MOCK] Scrubber moved to ${newLeft}px`);
+            log.info(`[MOCK] Scrubber moved to ${newLeft}px`);
         }
     });
 
@@ -177,5 +177,5 @@ export function populateMockTimeline() {
     //     frameLoading.style.display = "none";
     // }, 5000);
 
-    Logger.info("[MOCK] Timeline dynamically populated");
+    log.info("[MOCK] Timeline dynamically populated");
 }

@@ -12,7 +12,7 @@ const Config = {
     },
 
     testing: { //(false/true)
-        UITestViewOnly: true, // If true, populates UI with mock data
+        UITestViewOnly: false, // If true, populates UI with mock data
         MockControllerTesting: false, // If true, loads mock controller logic
         MockModelTesting: false, // If true, loads mock model data
         FullAppMockTesting: false, // If true, simulates everything
@@ -35,11 +35,26 @@ if (Config.testing.UITestViewOnly) {
         import("../examples/view/mockPopulateLayers.js").then(module => module.populateMockLayers());
         import("../examples/view/mockPopulateAnimationList.js").then(module => module.populateMockAnimationList());
         
-        // Enable Preview SVG if setting is enabled
+        Logger.info("⚡ UI Test Mode: Using mock views only!");
+
         if (Config.app.enablePreviewSVG) {
             document.getElementById("previewSVGContainer").style.display = "block";
         }
     });
+}
+
+// If Mock Controller Testing is enabled, replace controllers
+if (Config.testing.MockControllerTesting) {
+    import("../examples/controller/mockTimelineController.js").then(module => window.TimelineController = module.default);
+    import("../examples/controller/mockAnimationController.js").then(module => window.AnimationController = module.default);
+    Logger.info("⚡ Using mock controllers!");
+}
+
+// If Mock Model Testing is enabled, replace models
+if (Config.testing.MockModelTesting) {
+    import("../examples/model/mockTimelineModel.js").then(module => window.TimelineModel = module.default);
+    import("../examples/model/mockAnimationModel.js").then(module => window.AnimationModel = module.default);
+    Logger.info("⚡ Using mock models!");
 }
 
 export default Config;

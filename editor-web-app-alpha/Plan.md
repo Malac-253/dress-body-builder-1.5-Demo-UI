@@ -231,3 +231,35 @@ This **Alpha Version** is built with **future scalability** in mind, allowing fo
 ---
 
 Let me know if this structure **fully matches your expectations**, and I’ll continue generating the **individual scripts** accordingly!
+
+
+ALL HAVE 
+
+      {
+        "color": "#8aaac8",
+        "block_name":"Add SVG car"
+        "name": "Add SVG",
+        "note": "Red Car added",
+        "type": "Static",
+        "time": {
+          "start": 1,
+          "dur": 4,
+          "end": 5
+        },
+        "data":{
+               "id": "add-svg",
+               "parameters": {
+                  "startTime": "1000",
+                  "duration": "1000",
+                  "delay": "1",
+                  "file": "add path here ...",
+                  "scalX": "1",
+                  "scalY": "1",
+                  "tranX": "0",
+                  "tranY": "0",
+                  "rotat": "0",
+                  "dur": "1000",
+                  "ease": "d3.easeCubic"
+               }
+            }
+      }

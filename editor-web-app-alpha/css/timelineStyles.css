@@ -168,3 +168,28 @@
 .timeline-animation[data-type="Text"] {
     background-color: #bae1ff;
 }
+
+/* Improved timeline label styling */
+.timeline-label {
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 11px;
+    background-color: rgba(255, 255, 255, 0.75);
+    color: #333;
+    padding: 0px 2px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#timelineDebug {
+    max-height: 500px; /* adjust to needed height */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    white-space: pre-wrap; /* optional: wrap long text */
+}

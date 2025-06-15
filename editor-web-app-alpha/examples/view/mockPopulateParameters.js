@@ -1,12 +1,13 @@
-// mockPopulateParameters.js - Populates the Parameters UI with mock values for SVG Add Animation
+//mockPopulateParameters.js
 import Logger from "../../js/logger.js";
+const log = Logger.createLogger("mockPopulateParameters");
 
 export function populateMockParameters() {
-    Logger.trace("[MOCK] Populating Parameters UI for 'SVG Add' Animation");
+    log.trace("[MOCK] Populating Parameters UI for 'SVG Add' Animation");
 
     const paramForm = document.getElementById("paramForm");
     if (!paramForm) {
-        Logger.error("[MOCK] Parameters container not found!");
+        log.error("[MOCK] Parameters container not found!");
         return;
     }
 
@@ -108,11 +109,11 @@ export function populateMockParameters() {
             }
         });
 
-        Logger.info("[MOCK] Applied Parameters", updatedParams);
+        log.info("[MOCK] Applied Parameters", updatedParams);
         console.log("Applied Parameters:", updatedParams);
     });
 
     paramForm.appendChild(submitBtn);
 
-    Logger.info("[MOCK] Parameters UI Populated for SVG Add", { timelineID });
+    log.info("[MOCK] Parameters UI Populated for SVG Add", { timelineID });
 }

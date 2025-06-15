@@ -26,6 +26,7 @@ button:hover {
 }
 
 /* SEARCH BAR */
+.layers-tree input[type="text"],
 .animation-search input[type="text"] {
     width: 100%;
     border: 1px solid var(--border-color);

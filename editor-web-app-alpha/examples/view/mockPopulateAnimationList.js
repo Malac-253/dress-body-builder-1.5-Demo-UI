@@ -1,81 +1,55 @@
-// mockPopulateAnimationList.js
+//mockPopulateAnimationList.js
 import Logger from "../../js/logger.js";
+const log = Logger.createLogger("mockPopulateAnimationList");
 
 export function populateMockAnimationList() {
-    Logger.trace("[MOCK] Populating Available Animations UI");
+    
+    log.trace("[MOCK] Populating Available Animations UI");
 
     const animationItems = document.getElementById("animationItems");
-    if (!animationItems) {
-        Logger.error("[MOCK] Animation list container not found!");
+    const searchInput = document.getElementById("animationSearch"); // Reference search input
+
+    if (!animationItems || !searchInput) {
+        log.error("[MOCK] Animation list container or search input not found!");
         return;
     }
+
     animationItems.innerHTML = "";
 
     const mockAnimations = [
-        {
-            id: "walk",
-            name: "Walk Cycle",
-            longName: "cutaway.tools.character.walk",
-            parameters: ["startTime", "duration", "speed"],
-        },
-        {
-            id: "jump",
-            name: "Jump",
-            longName: "cutaway.tools.character.jump",
-            parameters: ["startTime", "height", "duration"],
-        },
-        {
-            id: "fadeIn2",
-            name: "Fade In2",
-            longName: "cutaway.tools.effects.fadeIn",
-            parameters: ["startTime", "duration", "opacityEnd"],
-        },
-        {
-            id: "walk2",
-            name: "Walk Cycle2",
-            longName: "cutaway.tools.character.walk",
-            parameters: ["startTime", "duration", "speed"],
-        },
-        {
-            id: "jump2",
-            name: "Jump2",
-            longName: "cutaway.tools.character.jump",
-            parameters: ["startTime", "height", "duration"],
-        },
-        {
-            id: "fadeIn2",
-            name: "Fade In2",
-            longName: "cutaway.tools.effects.fadeIn",
-            parameters: ["startTime", "duration", "opacityEnd"],
-        }
+        { id: "walk", name: "Walk Cycle", longName: "cutaway.tools.character.walk", parameters: ["startTime", "duration", "speed"] },
+        { id: "jump", name: "Jump", longName: "cutaway.tools.character.jump", parameters: ["startTime", "height", "duration"] },
+        { id: "fadeIn", name: "Fade In", longName: "cutaway.tools.effects.fadeIn", parameters: ["startTime", "duration", "opacityEnd"] },
+        { id: "walk2", name: "Walk Cycle 2", longName: "cutaway.tools.character.walk", parameters: ["startTime", "duration", "speed"] },
+        { id: "jump2", name: "Jump 2", longName: "cutaway.tools.character.jump", parameters: ["startTime", "height", "duration"] },
+        { id: "fadeIn2", name: "Fade In 2", longName: "cutaway.tools.effects.fadeIn", parameters: ["startTime", "duration", "opacityEnd"] }
     ];
 
-    mockAnimations.forEach((anim) => {
-        const animDiv = document.createElement("div");
-        animDiv.classList.add("animation-item");
-        animDiv.dataset.animId = anim.id;
-        animDiv.textContent = anim.name;
-        animDiv.draggable = true;
+    function renderAnimations(filteredAnimations) {
+        animationItems.innerHTML = ""; // Clear list before re-rendering
 
-        // Tooltip logic
-        const tooltipDiv = document.createElement("div");
-        tooltipDiv.classList.add("animation-tooltip");
-        tooltipDiv.innerHTML = `<strong>${anim.name}</strong><br/>${anim.parameters.join(", ")}`;
-        document.body.appendChild(tooltipDiv);
+        filteredAnimations.forEach((anim) => {
+            const animDiv = document.createElement("div");
+            animDiv.classList.add("animation-item");
+            animDiv.dataset.animId = anim.id;
+            animDiv.textContent = anim.name;
+            animDiv.draggable = true;
 
-        animDiv.addEventListener("mouseenter", (e) => {
-            tooltipDiv.style.display = "block";
-            tooltipDiv.style.position = "absolute";
-            tooltipDiv.style.top = `${e.clientY + 10}px`;
-            tooltipDiv.style.left = `${e.clientX + 10}px`;
+            // Tooltip logic
+            animDiv.title = `${anim.name} - Params: ${anim.parameters.join(", ")}`;
+
+            animationItems.appendChild(animDiv);
         });
+    }
 
-        animDiv.addEventListener("mouseleave", () => {
-            tooltipDiv.style.display = "none";
-        });
+    renderAnimations(mockAnimations); // Initial render
 
-        animationItems.appendChild(animDiv);
+    // Search functionality
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filteredAnimations = mockAnimations.filter(anim => anim.name.toLowerCase().includes(query));
+        renderAnimations(filteredAnimations);
     });
 
-    Logger.info("[MOCK] Animation List Populated");
+    log.info("[MOCK] Animation List Populated");
 }
