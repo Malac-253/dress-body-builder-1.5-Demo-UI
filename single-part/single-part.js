@@ -64,6 +64,8 @@ async function renderSinglePart() {
     return;
   }
 
+  console.log(partData); //.partData.is_amote_component == tur
+
   document.getElementById("part-title").textContent = partData.name;
   //document.getElementById("part-author").textContent = `Author: ${partData.owned_by ?? "???"}`;
   document.getElementById("part-author").textContent = `Author: B3 Lite & Amote Studio`;
@@ -72,40 +74,73 @@ async function renderSinglePart() {
   document.getElementById("json-output").textContent = JSON.stringify(partData, null, 2);
 
   let designs = [];
-
   let usedDesign = null;
 
-  if (forcedCdId) {
+  // ===== AMOTE OVERRIDE BLOCK =====
+  // If this part is an Amote component, allow using a color design even if it belongs to a different part.
+  if (partData.is_amote_component === true) {
     try {
-      const forcedDesign = await fetchOneColorDesign(forcedCdId);
-      if (String(forcedDesign.graphical_part_id) === String(partId)) {
+      if (forcedCdId) {
+        // Use the forced color design outright, skipping the part-ownership check
+        const forcedDesign = await fetchOneColorDesign(forcedCdId);
         usedDesign = forcedDesign;
-        // Add it to the designs array if it wasn’t in the list (for completeness)
-        if (!designs.some(d => d.id === forcedCdId)) designs.push(forcedDesign);
+        if (!designs.some(d => d.color_design_id === forcedDesign.color_design_id)) {
+          designs.push(forcedDesign);
+        }
+      } else if (partData.standard_color_design) {
+        // Fetch the standard color design by ID directly, skipping the part-ownership check
+        const stdDesign = await fetchOneColorDesign(partData.standard_color_design);
+        usedDesign = stdDesign;
+        if (!designs.some(d => d.color_design_id === stdDesign.color_design_id)) {
+          designs.push(stdDesign);
+        }
       } else {
-        console.warn(
-          `color_design_id=${forcedCdId} does not belong to part_id=${partId}. Ignoring parameter.`
-        );
+        // No forced ID and no standard specified; fall back to the normal per-part fetch
+        designs = await fetchColorDesigns(partId);
+        if (designs.length > 0) usedDesign = designs[0];
       }
     } catch (e) {
-      console.warn("Could not fetch forced colour design:", e);
+      console.warn("Amote override: could not fetch color design directly; falling back.", e);
+      try {
+        designs = await fetchColorDesigns(partId);
+        if (partData.standard_color_design) {
+          usedDesign = designs.find(cd => cd.color_design_id === partData.standard_color_design) || designs[0] || null;
+        } else {
+          usedDesign = designs[0] || null;
+        }
+      } catch {}
     }
-  }else{
-    try {
-      designs = await fetchColorDesigns(partId);
-    } catch {}
+  } else {
+    // ===== NORMAL (non-amote) FLOW =====
+    if (forcedCdId) {
+      try {
+        const forcedDesign = await fetchOneColorDesign(forcedCdId);
+        if (String(forcedDesign.graphical_part_id) === String(partId)) {
+          usedDesign = forcedDesign;
+          if (!designs.some(d => d.color_design_id === forcedCdId)) designs.push(forcedDesign);
+        } else {
+          console.warn(
+            `color_design_id=${forcedCdId} does not belong to part_id=${partId}. Ignoring parameter.`
+          );
+        }
+      } catch (e) {
+        console.warn("Could not fetch forced colour design:", e);
+      }
+    } else {
+      try {
+        designs = await fetchColorDesigns(partId);
+      } catch {}
 
-    if (partData.standard_color_design) {
-      usedDesign = designs.find(cd => cd.color_design_id === partData.standard_color_design);
+      if (partData.standard_color_design) {
+        usedDesign = designs.find(cd => cd.color_design_id === partData.standard_color_design) || null;
+      }
+      if (!usedDesign && designs.length > 0) usedDesign = designs[0];
     }
-
-    if (!usedDesign && designs.length > 0) usedDesign = designs[0];
   }
 
   if (usedDesign) {
     document.getElementById("color-json-output").textContent = JSON.stringify(usedDesign, null, 2);
   }
-
 
   const colorData = usedDesign ? usedDesign.color_data : { _line_group:[], _color_group:[] };
 
