@@ -78,7 +78,7 @@ async function renderSinglePart() {
 
   // ===== AMOTE OVERRIDE BLOCK =====
   // If this part is an Amote component, allow using a color design even if it belongs to a different part.
-  if (partData.is_amote_component === true) {
+  if (true) {
     try {
       if (forcedCdId) {
         // Use the forced color design outright, skipping the part-ownership check
