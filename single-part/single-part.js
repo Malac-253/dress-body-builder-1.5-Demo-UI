@@ -45,6 +45,203 @@ async function fetchOneColorDesign(id) {
 }
 
 
+
+
+
+
+
+
+// ————————————————————————————————————————————————————————————————
+// JSON helper: deep-clone with color-design IDs stripped
+function stripColorDesignIds(input) {
+  const kill = new Set(["id", "_id", "design_id", "colorDesignId"]);
+  const isObj = v => v && typeof v === "object" && !Array.isArray(v);
+  const dive = (v) => {
+    if (Array.isArray(v)) return v.map(dive);
+    if (isObj(v)) {
+      const out = {};
+      for (const [k, val] of Object.entries(v)) {
+        if (kill.has(k)) continue;
+        out[k] = dive(val);
+      }
+      return out;
+    }
+    return v;
+  };
+  return dive(input);
+}
+
+// Simple schema-ish checks (non-breaking, just for user feedback)
+function validatePartGraph(graph) {
+  // Accept either the “graphical_data” object itself or a full API object
+  const g = graph && graph.graphical_data ? graph.graphical_data : graph;
+  const ok =
+    g && typeof g === "object" &&
+    (
+      g._parts || g.parts || g.graph || g._layers ||
+      // very permissive: allow objects that contain "main"-like layers in nested structures
+      Object.keys(g).some(k => /main/i.test(k))
+    );
+  return { ok, msg: ok ? "Looks like a valid graph payload" : "Doesn’t look like a graph payload" };
+}
+
+function validateColorDesign(color) {
+  const c = color && color.color_data ? color.color_data : color;
+  const ok = c && typeof c === "object" && (Array.isArray(c._color_group) || Array.isArray(c._line_group));
+  return { ok, msg: ok ? "Color groups present" : "Missing _color_group/_line_group" };
+}
+
+// Debounce helper for “Live” mode
+function debounce(fn, ms = 350) {
+  let t = null;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+
+// Build a compact editor next to a given <pre> block
+function mountJsonEditor({
+  preEl,                       // <pre> to sit next to
+  initialValue,                // JSON object
+  label,                       // "Part JSON" | "Color Design JSON"
+  validate,                    // validator function -> {ok,msg}
+  onApply,                     // (jsonObj) => void  (you re-render here)
+  onFormat,                    // optional prettifier (defaults to JSON.stringify)
+  applyOnCtrlEnter = true,     // Ctrl/Cmd+Enter quick apply
+  liveDisabled = true,         // default “Live” OFF
+}) {
+  const container = document.createElement("div");
+  container.className = "editor-wrap";
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "editor-toolbar";
+
+  const editBtn = document.createElement("button");
+  editBtn.textContent = `Edit ${label}`;
+  editBtn.type = "button";
+
+  const applyBtn = document.createElement("button");
+  applyBtn.textContent = `Apply ${label}`;
+  applyBtn.type = "button";
+
+  const fmtBtn = document.createElement("button");
+  fmtBtn.textContent = "Beautify";
+  fmtBtn.type = "button";
+
+  const liveLabel = document.createElement("label");
+  const liveCb = document.createElement("input");
+  liveCb.type = "checkbox";
+  liveCb.checked = !liveDisabled;
+  const liveText = document.createElement("span");
+  liveText.textContent = " Live (debounced)";
+  liveLabel.append(liveCb, liveText);
+
+  const enterHint = document.createElement("span");
+  enterHint.className = "small";
+  enterHint.textContent = "Ctrl/Cmd+Enter applies";
+
+  const status = document.createElement("span");
+  status.className = "status";
+
+  toolbar.append(editBtn, applyBtn, fmtBtn, liveLabel, enterHint, status);
+
+  const ta = document.createElement("textarea");
+  ta.className = "editor-ta";
+  ta.spellcheck = false;
+
+  const stringify = onFormat || ((v) => JSON.stringify(v, null, 2));
+  const setInitial = (obj) => { ta.value = stringify(obj ?? {}); pingValidate(); };
+
+  // show/hide editor
+  let open = false;
+  editBtn.onclick = () => {
+    open = !open;
+    ta.style.display = open ? "block" : "none";
+  };
+
+  // format
+  fmtBtn.onclick = () => {
+    try {
+      const obj = JSON.parse(ta.value);
+      ta.value = stringify(obj);
+      pingValidate();
+    } catch (e) {
+      // keep status red; no throw
+    }
+  };
+
+  // validate + color
+  function pingValidate() {
+    try {
+      const obj = JSON.parse(ta.value);
+      const { ok, msg } = validate(obj);
+      status.textContent = ok ? `✓ ${msg}` : `• ${msg}`;
+      status.className = "status " + (ok ? "ok" : "err");
+      return ok;
+    } catch (e) {
+      status.textContent = "JSON error: " + e.message;
+      status.className = "status err";
+      return false;
+    }
+  }
+
+  ta.addEventListener("input", () => {
+    const ok = pingValidate();
+    if (liveCb.checked && ok) debouncedApply();
+  });
+
+  // apply
+  const doApply = () => {
+    try {
+      let obj = JSON.parse(ta.value);
+      onApply(obj);
+      pingValidate();
+    } catch (e) {
+      status.textContent = "Apply failed: " + e.message;
+      status.className = "status err";
+    }
+  };
+  applyBtn.onclick = doApply;
+
+  // Ctrl/Cmd+Enter apply
+  if (applyOnCtrlEnter) {
+    ta.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        doApply();
+      }
+    });
+  }
+
+  const debouncedApply = debounce(doApply, 400);
+
+  container.append(toolbar, ta);
+  preEl.parentNode.insertBefore(container, preEl); // mount right before the <pre>
+  setInitial(initialValue);
+
+  // reflect live state on container appearance
+  const setLiveClass = () => {
+    if (liveCb.checked) container.classList.add("live");
+    else container.classList.remove("live");
+  };
+  setLiveClass();
+  liveCb.onchange = setLiveClass;
+
+  return { setValue: setInitial, getTextArea: () => ta };
+}
+
+
+
+
+
+
+
+
+
+
+
+
 // 4) Render function
 async function renderSinglePart() {
   const partId = getPartIdFromURL();
@@ -168,6 +365,65 @@ async function renderSinglePart() {
   // Render big svg
   const fallbackName = "unknown";
   const { resetViewFill, resetViewLine } = renderGraphicalPartSVG("#big-svg-container", partData.graphical_data, colorData, fallbackName);
+
+
+
+
+  
+  // Grab the existing raw JSON <pre> blocks
+const partPre   = document.getElementById("json-output");
+const colorPre  = document.getElementById("color-json-output");
+
+// Keep the pristine originals (so "reset" elsewhere still works)
+let currentGraph = partData.graphical_data ?? partData ?? {};
+let currentColor = colorData ?? {};
+
+// A single re-render function that mimics your normal pipeline
+function reRender(graphObj, colorObj, from = "edited") {
+  // Allow user to paste the whole API object; extract .graphical_data if present
+  const graphPayload = graphObj && graphObj.graphical_data ? graphObj.graphical_data : graphObj;
+  // Ignore IDs in color design
+  const colorPayload = stripColorDesignIds(
+    (colorObj && colorObj.color_data) ? colorObj.color_data : colorObj
+  );
+
+  // Clear old SVG
+  d3.select("#big-svg-container").html("");
+
+  // Use the same renderer you already call
+  renderGraphicalPartSVG("#big-svg-container", graphPayload, colorPayload, from);
+
+  // Also refresh the visible raw <pre> blocks so they mirror the active state
+  if (partPre)  partPre.textContent  = JSON.stringify({ graphical_data: graphPayload }, null, 2);
+  if (colorPre) colorPre.textContent = JSON.stringify({ color_data: colorPayload }, null, 2);
+
+  // Keep in memory for subsequent edits
+  currentGraph = graphPayload;
+  currentColor = colorPayload;
+}
+
+// Mount the two editors right next to their raw JSON blocks
+const partEditor = mountJsonEditor({
+  preEl: partPre,
+  initialValue: currentGraph,
+  label: "Part JSON",
+  validate: validatePartGraph,
+  onApply: (obj) => reRender(obj, currentColor, "edited-part"),
+  liveDisabled: true
+});
+
+const colorEditor = mountJsonEditor({
+  preEl: colorPre,
+  initialValue: currentColor,
+  label: "Color Design JSON",
+  validate: validateColorDesign,
+  onApply: (obj) => reRender(currentGraph, obj, "edited-color"),
+  liveDisabled: true
+});
+
+
+
+
 
   // Hook up reset
   const resetBtn = document.getElementById("reset-view-btn");

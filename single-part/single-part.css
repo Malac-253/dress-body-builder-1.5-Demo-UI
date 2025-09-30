@@ -179,3 +179,78 @@
     gap: 10px;
     /* or justify-content: flex-start if you prefer */
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* ——— Inline JSON editors ——— */
+.editor-wrap {
+  margin: 8px 0 14px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 8px;
+  background: #fafafa;
+}
+
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.editor-toolbar button,
+.editor-toolbar label {
+  font-size: 12px;
+}
+
+.editor-toolbar .status {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.ok { color: #0a7a0a; }
+.status.err { color: #b00020; }
+
+.editor-ta {
+  display: none;           /* hidden until "Edit" clicked */
+  width: 100%;
+  min-height: 220px;
+  resize: vertical;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.editor-wrap.live .editor-ta { outline: 1px dashed #ccc; }
+
+.small {
+  font-size: 11px;
+  opacity: 0.8;
+}
