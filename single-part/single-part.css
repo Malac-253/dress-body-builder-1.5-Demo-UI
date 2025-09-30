@@ -254,3 +254,86 @@
   font-size: 11px;
   opacity: 0.8;
 }
+
+
+
+/* Make the left column content stick and scroll within the viewport */
+.left-sticky {
+  position: sticky;
+  top: 12px;                  /* space from top; adjust to taste */
+  align-self: start;          /* helps Safari/Grid stickiness */
+  max-height: calc(100vh - 24px);
+  overflow: auto;             /* its own scrollbar when tall */
+  padding-right: 8px;         /* avoid scrollbar hugging content */
+  background: var(--page-bg, #fff);
+  z-index: 1;                 /* stay above right-side elements if overlapping */
+  border-radius: 6px;         /* optional – nicer look while scrolling */
+}
+
+/* IMPORTANT: ensure ancestors don’t kill sticky by clipping overflow */
+.page, .page-grid, .columns, .content, .container {
+  overflow: visible;          /* only add if one of your wrappers was 'hidden' */
+}
+
+/* If your two columns are a CSS grid, this helps stickiness with Safari */
+.left-column {
+  align-self: start;
+}
+
+/* Optional: on small screens, disable stickiness to avoid cramped layout */
+@media (max-width: 900px) {
+  .left-sticky {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* If you ever add a fixed header, avoid overlap by declaring its height once: */
+:root { --header-h: 0px; } /* update to e.g. 60px if header becomes fixed */
+.left-sticky { top: calc(var(--header-h) + 12px); }
+
+/* Keep Reset/Thumbs visible even when the SVG area is tall (pin that mini-toolbar). */
+#reset-view-btn { position: sticky; top: 0; z-index: 2; }
+
+
+/* Ensure the 2-col container doesn't kill sticky */
+.split-container {
+  /* If you already set display, keep it. */
+  display: grid;                    /* or keep your existing grid/flex */
+  grid-template-columns: minmax(320px, 460px) 1fr;
+  gap: 20px;
+  align-items: start;
+  overflow: visible;                /* critical for sticky to work */
+}
+
+/* STICKY LEFT COLUMN (entire stack: reset, thumbs, SVG, etc.) */
+.left-column {
+  position: sticky;
+  top: 12px;                        /* adjust to taste or header height */
+  align-self: start;                /* helps Safari/Grid */
+  max-height: calc(100vh - 24px);   /* so it can scroll inside itself */
+  overflow: auto;                   /* inner scrolling when tall */
+  z-index: 1;                       /* above right when overlapping */
+  background: #fff;                 /* optional polish */
+  border-radius: 6px;               /* optional polish */
+  padding-right: 8px;               /* keep content off scrollbar */
+}
+
+/* If ANY ancestor had overflow set, undo it here */
+body, main, .content, .container, .columns {
+  overflow: visible !important;
+}
+
+/* Optional: account for a fixed header if you add one later */
+:root { --header-h: 0px; }          /* set to e.g. 60px when header fixed */
+.left-column { top: calc(var(--header-h) + 12px); }
+
+/* Mobile: disable stickiness to avoid cramped layout */
+@media (max-width: 900px) {
+  .left-column {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}
