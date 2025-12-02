@@ -337,3 +337,55 @@ body, main, .content, .container, .columns {
     overflow: visible;
   }
 }
+
+/* Color catalog uses the same grid, but we clamp size a bit */
+.color-catalog-list.type-grid {
+  display: grid;  /* THIS is the missing piece */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;      /* space between cards */
+}
+
+/* Make each mini card a bit more compact */
+.color-catalog .type-cell,
+.color-catalog-cell {
+  max-width: 100%;  /* let the grid define width */
+  margin: 0;        /* no extra centering */
+}
+
+/* Most important: keep the SVG box bounded */
+.color-catalog .svg-container {
+  width: 100%;
+  height: 200px;        /* adjust if you want bigger/smaller preview */
+  overflow: hidden;
+}
+
+/* Right-column JSON boxes: fixed height + scroll */
+#json-output,
+#color-json-output {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  overflow: auto;      /* both x and y will scroll if needed */
+  box-sizing: border-box;
+
+  /* optional but usually nice for dev JSON panes */
+  border: 1px solid #444;
+  padding: 0.5rem;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+#color-catalog {
+  width: 100%;   /* fill the left column */
+}
+
+/* JSON boxes should fill their right column, not half */
+#json-output,
+#color-json-output {
+  width: 100%;
+}
+
+/* Allow the right column to shrink within the grid/flex layout */
+.right-column {
+  min-width: 0;
+}

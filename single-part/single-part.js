@@ -44,6 +44,108 @@ async function fetchOneColorDesign(id) {
   return res.json();
 }
 
+// Build a mini "type-catalog" style grid of color designs for this part.
+// - designs: array of color design API objects
+// - partData: the full part object (so we can reuse graphical_data)
+// - partId: graphical_part_id
+// - selectedColorId: currently active color_design_id (for highlight)
+function renderColorCatalog(designs, partData, partId, selectedColorId) {
+  const wrapper = document.getElementById("color-catalog");
+  const listEl  = document.getElementById("color-catalog-list");
+  if (!wrapper || !listEl) return;
+
+  listEl.innerHTML = "";
+
+  if (!Array.isArray(designs) || designs.length === 0) {
+    const msg = document.createElement("p");
+    msg.textContent = "No color designs found for this part yet.";
+    listEl.appendChild(msg);
+    return;
+  }
+
+  designs.forEach((cd) => {
+    const colorId = cd.color_design_id;
+
+    // Outer card: same core class as type catalog
+    const cell = document.createElement("div");
+    cell.className = "type-cell color-catalog-cell";
+    if (
+      selectedColorId != null &&
+      Number(colorId) === Number(selectedColorId)
+    ) {
+      cell.classList.add("selected");
+    }
+
+    // (A) SVG preview area
+    const svgContainer = document.createElement("div");
+    svgContainer.className = "svg-container";
+    const svgId = `colorSvg-${colorId}`;
+    svgContainer.id = svgId;
+    cell.appendChild(svgContainer);
+
+    // Build a URL that keeps us on this page but swaps color_id
+    const params = new URLSearchParams(window.location.search);
+    params.set("part_id", partId);
+    params.set("color_id", colorId);
+    const href = `${window.location.pathname}?${params.toString()}`;
+
+    // (B) Name + link (just like type catalog)
+    const nameP = document.createElement("p");
+    nameP.className = "part-name";
+
+    const anchor = document.createElement("a");
+    anchor.href = href;
+    if (typeof TARGET !== "undefined") {
+      anchor.target = TARGET;
+    }
+    anchor.textContent = cd.name || `Color design #${colorId}`;
+    nameP.appendChild(anchor);
+    cell.appendChild(nameP);
+
+    // (C) Small info line
+    const authorLine = document.createElement("p");
+    authorLine.className = "author-line";
+    authorLine.textContent = `Color Design ID: ${colorId}`;
+    cell.appendChild(authorLine);
+
+    // (D) Reset view (mini version, but reusing .reset-btn)
+    const resetBtn = document.createElement("button");
+    resetBtn.className = "reset-btn";
+    resetBtn.textContent = "Reset View";
+    cell.appendChild(resetBtn);
+
+    // Make the whole card clickable, but ignore the reset button clicks
+    cell.addEventListener("click", (evt) => {
+      if (evt.target === resetBtn || evt.target.tagName.toLowerCase() === "button") {
+        return;
+      }
+      window.location.href = href;
+    });
+
+    listEl.appendChild(cell);
+
+    // Render the preview SVG for this color design
+    if (partData && partData.graphical_data) {
+      const fallbackName = (partData.name || "unknown").toLowerCase();
+      const colorData = cd.color_data || { _line_group: [], _color_group: [] };
+
+      const { resetViewFill, resetViewLine } = renderGraphicalPartSVG(
+        `#${svgId}`,
+        partData.graphical_data,
+        colorData,
+        fallbackName
+      );
+
+      // Avoid card click when pressing reset
+      resetBtn.onclick = (evt) => {
+        evt.stopPropagation();
+        if (typeof resetViewFill === "function") resetViewFill();
+        if (typeof resetViewLine === "function") resetViewLine();
+      };
+    }
+  });
+}
+
 
 
 
@@ -340,6 +442,24 @@ async function renderSinglePart() {
   }
 
   const colorData = usedDesign ? usedDesign.color_data : { _line_group:[], _color_group:[] };
+
+
+  // Build the color catalog (mini type-catalog style) at the bottom.
+  // We fetch the full list fresh, so it always shows all color designs
+  // actually attached to this part (even if the current design came from
+  // an Amote override).
+  let catalogDesigns = [];
+  try {
+    catalogDesigns = await fetchColorDesigns(partId);
+  } catch (e) {
+    console.warn("Could not fetch full color design list for catalog; using fallback set.", e);
+    catalogDesigns = designs;
+  }
+
+  const selectedColorId =
+    (usedDesign && usedDesign.color_design_id) || forcedCdId || null;
+
+  renderColorCatalog(catalogDesigns, partData, partId, selectedColorId);
 
   // After we fetch `partData` and `usedDesign`, we fill #additional-info:
   const infoElem = document.getElementById("additional-info");

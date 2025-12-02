@@ -4,6 +4,7 @@
   <meta charset="UTF-8"/>
   <title>Single Part Viewer</title>
   <link rel="stylesheet" href="single-part.css"/>
+  <link rel="stylesheet" href="../type-catalog/type-catalog.css"/>
 </head>
 <body>
   <header>
@@ -38,6 +39,17 @@
 
       <h3>Raw API JSON (color design)</h3>
       <pre id="color-json-output"></pre>
+
+      <section id="color-catalog" class="color-catalog">
+        <h3>Color Designs for This Part</h3>
+        <!-- NOTE: add `type-grid` here to reuse your catalog grid CSS -->
+        <div id="color-catalog-list" class="color-catalog-list type-grid"></div>
+      </section>
+
+    </div>
+
+    <div class="aut-column">
+
     </div>
   </main>
 
