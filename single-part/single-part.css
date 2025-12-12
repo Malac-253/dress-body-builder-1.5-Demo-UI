@@ -438,7 +438,7 @@ body, main, .content, .container, .columns {
 
 /* The Go button */
 #quick-jump-submit {
-  padding: 0.55rem 5 rem;
+  padding: 0.55rem 5rem;
   font-size: 1rem;
   border-radius: 4px;
   border: 1px solid #888;
