@@ -34,19 +34,43 @@
 
     <!-- Right: textual info -->
     <div class="right-column">
-      <h3>Raw API JSON (part)</h3>
-      <pre id="json-output"></pre>
 
-      <h3>Raw API JSON (color design)</h3>
-      <pre id="color-json-output"></pre>
+      <!-- NEW: Quick jump controls -->
+      <section id="quick-jump" class="quick-jump">
+        <h3>Jump to Part / Color</h3>
+        <form id="quick-jump-form" class="quick-jump-form">
+          <div class="quick-jump-field">
+            <label for="quick-jump-part-id">Part ID*</label>
+            <input
+              id="quick-jump-part-id"
+              type="number"
+              inputmode="numeric"
+              placeholder="e.g. 43"
+            />
+          </div>
 
-      <section id="color-catalog" class="color-catalog">
-        <h3>Color Designs for This Part</h3>
-        <!-- NOTE: add `type-grid` here to reuse your catalog grid CSS -->
-        <div id="color-catalog-list" class="color-catalog-list type-grid"></div>
+          <div class="quick-jump-field">
+            <label for="quick-jump-color-id">Color ID (optional)</label>
+            <input
+              id="quick-jump-color-id"
+              type="number"
+              inputmode="numeric"
+              placeholder="e.g. 251"
+            />
+          </div>
+
+          <button id="quick-jump-submit" type="submit">
+            Go
+          </button>
+        </form>
       </section>
 
+      <h3>Raw API JSON (part)</h3>
+      <pre id="json-output"></pre>
+      <h3>Raw API JSON (color design)</h3>
+      <pre id="color-json-output"></pre>
     </div>
+
 
     <div class="aut-column">
 

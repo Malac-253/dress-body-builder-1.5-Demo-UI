@@ -337,6 +337,67 @@ function mountJsonEditor({
 
 
 
+// Setup the "Jump to Part / Color" controls at the top-right.
+function setupQuickJumpControls() {
+  const form = document.getElementById("quick-jump-form");
+  if (!form) return;
+
+  const partInput  = document.getElementById("quick-jump-part-id");
+  const colorInput = document.getElementById("quick-jump-color-id");
+
+  function navigateToPartAndColor() {
+    if (!partInput) return;
+
+    const partIdRaw  = partInput.value.trim();
+    const colorIdRaw = colorInput ? colorInput.value.trim() : "";
+
+    // Current values from URL (for the "color-only" case)
+    const urlParams           = new URLSearchParams(window.location.search);
+    const currentPartFromUrl  = urlParams.get("part_id");
+
+    let targetPartId  = null;
+    let targetColorId = null;
+
+    if (partIdRaw && colorIdRaw) {
+      // Case 1: both part + color given -> go to that exact combo
+      targetPartId  = partIdRaw;
+      targetColorId = colorIdRaw;
+    } else if (partIdRaw && !colorIdRaw) {
+      // Case 2: only part given -> go to that part, let page pick its standard color
+      targetPartId  = partIdRaw;
+      targetColorId = null;
+    } else if (!partIdRaw && colorIdRaw) {
+      // Case 3: only color given -> use current part with new color
+      if (!currentPartFromUrl) {
+        // No part in URL; nothing sensible to do
+        partInput.focus();
+        return;
+      }
+      targetPartId  = currentPartFromUrl;
+      targetColorId = colorIdRaw;
+    } else {
+      // Case 4: nothing entered -> do nothing
+      partInput.focus();
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    params.set("part_id", targetPartId);
+
+    if (targetColorId) {
+      params.set("color_id", targetColorId);
+    } else {
+      params.delete("color_id");
+    }
+
+    window.location.search = params.toString();
+  }
+
+  form.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    navigateToPartAndColor();
+  });
+}
 
 
 
@@ -580,5 +641,6 @@ function setupLikeDislike() {
 
 (async function init() {
   setupLikeDislike();
+  setupQuickJumpControls();
   await renderSinglePart();
 })();
